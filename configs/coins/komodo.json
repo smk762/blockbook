@@ -1,0 +1,67 @@
+{
+  "coin": {
+    "name": "Komodo",
+    "shortcut": "KMD",
+    "label": "Komodo",
+    "alias": "komodo"
+  },
+  "ports": {
+    "backend_rpc": 8077,
+    "backend_message_queue": 38377,
+    "blockbook_internal": 9077,
+    "blockbook_public": 9177
+  },
+  "ipc": {
+    "rpc_url_template": "http://127.0.0.1:{{.Ports.BackendRPC}}",
+    "rpc_user": "rpc",
+    "rpc_pass": "rpc",
+    "rpc_timeout": 25,
+    "message_queue_binding_template": "tcp://127.0.0.1:{{.Ports.BackendMessageQueue}}"
+  },
+  "backend": {
+    "package_name": "backend-komodo",
+    "package_revision": "komodo-1",
+    "system_user": "komodo",
+    "version": "24.0.1",
+    "binary_url": "https://github.com/KomodoPlatform/komodo/releases/download/0.7.2/komodo_0.7.2_linux.zip",
+    "verification_type": "sha256",
+    "verification_source": "688d31595219c22bdc39dffbd0062b597c52db6beff6fcd1e4a6f60f89a89668",
+    "extract_command": "unzip komodo_0.7.2_linux.zip; tar -C backend --strip 1 -xf",
+    "exclude_files": [],
+    "exec_command_template": "{{.Env.BackendInstallPath}}/{{.Coin.Alias}}/bin/komodod -datadir={{.Env.BackendDataPath}}/{{.Coin.Alias}}/backend -conf={{.Env.BackendInstallPath}}/{{.Coin.Alias}}/{{.Coin.Alias}}.conf -pid=/run/{{.Coin.Alias}}/{{.Coin.Alias}}.pid",
+    "logrotate_files_template": "{{.Env.BackendDataPath}}/{{.Coin.Alias}}/backend/*.log",
+    "postinst_script_template": "",
+    "service_type": "forking",
+    "service_additional_params_template": "",
+    "protect_memory": true,
+    "mainnet": true,
+    "server_config_file": "komodo.conf",
+    "client_config_file": "komodo_client.conf"
+  },
+  "blockbook": {
+    "package_name": "blockbook-komodo",
+    "system_user": "blockbook-komodo",
+    "internal_binding_template": ":{{.Ports.BlockbookInternal}}",
+    "public_binding_template": ":{{.Ports.BlockbookPublic}}",
+    "explorer_url": "",
+    "additional_params": "-dbcache=1073741824",
+    "block_chain": {
+      "parse": true,
+      "mempool_workers": 8,
+      "mempool_sub_workers": 2,
+      "block_addresses_to_keep": 300,
+      "xpub_magic": 76067358,
+      "slip44": 141,
+      "explorer_url": "https://explorer.kmd.io/",
+      "additional_params": {
+        "fiat_rates": "coingecko",
+        "fiat_rates_vs_currencies": "AED,ARS,AUD,BDT,BHD,BMD,BRL,CAD,CHF,CLP,CNY,CZK,DKK,EUR,GBP,HKD,HUF,IDR,ILS,INR,JPY,KRW,KWD,LKR,MMK,MXN,MYR,NGN,NOK,NZD,PHP,PKR,PLN,RUB,SAR,SEK,SGD,THB,TRY,TWD,UAH,USD,VEF,VND,ZAR,BTC,ETH",
+        "fiat_rates_params": "{\"url\": \"https://api.coingecko.com/api/v3\", \"coin\": \"komodo\", \"periodSeconds\": 900}"
+      }
+    }
+  },
+  "meta": {
+    "package_maintainer": "Komodo QA",
+    "package_maintainer_email": "qa@komodoplatform.com"
+  }
+}
